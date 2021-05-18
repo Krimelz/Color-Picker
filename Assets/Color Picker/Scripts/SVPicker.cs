@@ -2,75 +2,75 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class SVPicker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
-{
+public class SVPicker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler {
     public event Action OnChange;
     public Camera cam;
 
     [SerializeField] private GameObject pickerBackground;
 
+    private RectTransform rectTransform;
     private Rect rect;
-    private Vector3 sv;
+    private Vector2 sv;
+    private float left;
+    private float right;
+    private float top;
+    private float bottom;
 
-    private void Start()
-    {
-        rect = GetComponent<RectTransform>().rect;
+    private void Start() {
+        rectTransform = GetComponent<RectTransform>();
+        rect = rectTransform.rect;
+
+        left =  -rect.width / 2f;
+        right = rect.width / 2f;
+        top = rect.height / 2f;
+        bottom = -rect.height / 2f;
     }
 
-    public float GetS()
-    {
+    public float GetS() {
         return (pickerBackground.transform.localPosition.x / (rect.width / 100f) + 50f) / 100f;
     }
 
-    public float GetV()
-    {
+    public float GetV() {
         return (pickerBackground.transform.localPosition.y / (rect.height / 100f) + 50f) / 100f;
     }
 
-    public void SetS(float s)
-    {
+    // TODO
+    public void SetS(float s) {
         sv.x = s * 100f;
         SetPickerPosition(sv);
     }
 
-    public void SetV(float v)
-    {
+    // TODO
+    public void SetV(float v) {
         sv.y = v * 100f;
         SetPickerPosition(sv);
     }
 
-    private void UpdateSV()
-    {
-        RectTransformUtility.ScreenPointToWorldPointInRectangle(GetComponent<RectTransform>(), Input.mousePosition, cam, out sv);
+    private void UpdateSV() {
+        sv = Input.mousePosition;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, sv, cam, out sv);
+        SetPickerPosition(sv);
     }
 
-    private void SetPickerPosition(Vector3 position)
-    {
-        // TODO: Set correct bounds
-        position.x = Mathf.Clamp(position.x, transform.position.x - 1.27f, transform.position.x + 1.27f);
-        position.y = Mathf.Clamp(position.y, transform.position.y - 1.85f, transform.position.y + 1.85f);
+    private void SetPickerPosition(Vector3 position) {
+        position.x = Mathf.Clamp(position.x, left, right);
+        position.y = Mathf.Clamp(position.y, bottom, top);
         position.z = 0f;
 
-        pickerBackground.transform.position = position;
+        pickerBackground.transform.localPosition = position;
 
         OnChange.Invoke();
     }
 
-    public void OnDrag(PointerEventData eventData)
-    {
+    public void OnDrag(PointerEventData eventData) {
         UpdateSV();
-        SetPickerPosition(sv);
     }
 
-    public void OnPointerDown(PointerEventData eventData)
-    {
+    public void OnPointerDown(PointerEventData eventData) {
         UpdateSV();
-        SetPickerPosition(sv);
     }
 
-    public void OnPointerUp(PointerEventData eventData)
-    {
+    public void OnPointerUp(PointerEventData eventData) {
         UpdateSV();
-        SetPickerPosition(sv);
     }
 }
