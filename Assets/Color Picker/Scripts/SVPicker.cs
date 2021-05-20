@@ -36,13 +36,13 @@ public class SVPicker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
 
     // TODO
     public void SetS(float s) {
-        sv.x = s * 100f;
+        sv.x = s * rect.width - rect.width / 2f;
         SetPickerPosition(sv);
     }
 
     // TODO
     public void SetV(float v) {
-        sv.y = v * 100f;
+        sv.y = v * rect.height - rect.height / 2f;
         SetPickerPosition(sv);
     }
 

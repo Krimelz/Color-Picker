@@ -6,6 +6,7 @@ TagManager:
   tags:
   - ColorField
   - HueField
+  - Cube
   layers:
   - Default
   - TransparentFX

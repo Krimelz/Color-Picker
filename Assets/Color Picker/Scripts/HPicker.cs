@@ -10,7 +10,6 @@ public class HPicker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, ID
 
     private RectTransform rectTransform;
     private Rect rect;
-    private Vector2 h;
     private float top;
     private float bottom;
 
@@ -28,14 +27,14 @@ public class HPicker : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, ID
 
     // TODO
     public void SetH(float h) {
-        this.h.y = h;
-        SetPickerPosition(new Vector2(transform.position.x, h));
+        float hue = h * rect.height;
+        SetPickerPosition(new Vector2(transform.position.x, hue));
     }
 
     private void UpdateH() {
-        h = Input.mousePosition;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, h, cam, out h);
-        SetPickerPosition(h);
+        Vector2 hue = new Vector2(0f, Input.mousePosition.y);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, hue, cam, out hue);
+        SetPickerPosition(hue);
     }
 
     private void SetPickerPosition(Vector3 position) {
